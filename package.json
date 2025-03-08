@@ -1,0 +1,29 @@
+{
+  "name": "discord-scheduler",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "register": "tsx --env-file=.env ./src/register.ts",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "test": "vitest",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@cloudflare/vitest-pool-workers": "^0.5.2",
+    "@cloudflare/workers-types": "^4.20241216.0",
+    "@mst-mkt/js-config": "npm:@jsr/mst-mkt__js-config@^0.1.1",
+    "@types/node": "^22.10.2",
+    "discord-api-types": "^0.37.111",
+    "tsx": "^4.19.2",
+    "typescript": "^5.5.2",
+    "vitest": "2.1.8",
+    "wrangler": "^3.60.3"
+  },
+  "dependencies": {
+    "discord-hono": "^0.8.5"
+  }
+}

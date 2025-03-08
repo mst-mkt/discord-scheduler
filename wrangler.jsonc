@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "discord-scheduler",
+  "main": "./src/index.ts",
+  "compatibility_date": "2025-03-08",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "observability": {
+    "enabled": true
+  }
+}
