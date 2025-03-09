@@ -15,6 +15,7 @@
     "@biomejs/biome": "^1.9.4",
     "@cloudflare/vitest-pool-workers": "^0.5.2",
     "@cloudflare/workers-types": "^4.20241216.0",
+    "@libsql/client": "^0.14.0",
     "@mst-mkt/js-config": "npm:@jsr/mst-mkt__js-config@^0.1.1",
     "@types/node": "^22.10.2",
     "discord-api-types": "^0.37.111",
