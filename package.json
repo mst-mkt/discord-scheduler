@@ -9,7 +9,10 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
-    "cf-typegen": "wrangler types"
+    "generate:drizzle": "drizzle-kit generate",
+    "migrate:local": "wrangler d1 migrations apply discord-scheduler --local",
+    "migrate:remote": "wrangler d1 migrations apply discord-scheduler --remote",
+    "drizzle-studio": "drizzle-kit studio --config ./drizzle-studio.config.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

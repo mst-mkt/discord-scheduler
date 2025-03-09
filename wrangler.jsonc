@@ -13,7 +13,8 @@
     {
       "binding": "DB",
       "database_name": "discord-scheduler",
-      "database_id": "d92fd56b-f0a7-4e5c-a982-a24ab0b6da72"
+      "database_id": "d92fd56b-f0a7-4e5c-a982-a24ab0b6da72",
+      "migrations_dir": "./drizzle/"
     }
   ]
 }
