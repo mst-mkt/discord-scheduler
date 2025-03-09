@@ -1,8 +1,11 @@
+import type { D1Database } from '@cloudflare/workers-types'
 import { DiscordHono } from 'discord-hono'
 import { commands } from './commands'
 
 export interface Env {
-  Bindings: {}
+  Bindings: {
+    DB: D1Database
+  }
 }
 
 const app = commands.reduce((acc, c) => {
