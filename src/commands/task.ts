@@ -149,10 +149,13 @@ const tasksEmbed = (task: InferSelectModel<typeof tasks>[]) => {
     .title(MESSAGES.TASK_LIST)
     .description(`全 ${task.length} 件`)
     .fields(
-      ...task.slice(0, 25).map((task) => ({
-        name: `${task.completedAt === null ? '⏳' : '✅'} ${task.content}`,
-        value: `-# \`${task.id}\` | ${task.createdAt?.toLocaleDateString('ja-JP')} ${task.category?.length === 0 ? '' : `| ${task.category?.join(', ')}`}`,
-      })),
+      ...task
+        .slice(0, 25)
+        .reverse()
+        .map((task) => ({
+          name: `${task.completedAt === null ? '⏳' : '✅'} ${task.content}`,
+          value: `-# \`${task.id}\` | ${task.createdAt?.toLocaleDateString('ja-JP')} ${task.category?.length === 0 ? '' : `| ${task.category?.join(', ')}`}`,
+        })),
     )
     .footer({
       text: task.length > 25 ? `残り ${task.length - 25} 件` : '',

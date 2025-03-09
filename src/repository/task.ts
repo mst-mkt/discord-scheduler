@@ -1,5 +1,5 @@
 import type { D1Database } from '@cloudflare/workers-types'
-import { type DrizzleError, type InferInsertModel, and, asc, eq, isNull } from 'drizzle-orm'
+import { type DrizzleError, type InferInsertModel, and, desc, eq, isNull } from 'drizzle-orm'
 import { fromAsyncThrowable, ok } from 'neverthrow'
 import { match } from 'ts-pattern'
 import { createDbClient } from '../db/client'
@@ -32,7 +32,7 @@ export const getTasks = async (
             .with('incomplete', () => and(eq(tasks.guildId, guildId), isNull(tasks.completedAt)))
             .exhaustive(),
         )
-        .orderBy(asc(tasks.createdAt)),
+        .orderBy(desc(tasks.createdAt)),
     (e) => e as DrizzleError,
   )()
 
