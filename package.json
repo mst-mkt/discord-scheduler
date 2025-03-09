@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
+    "predeploy": "npm run register",
     "register": "tsx --env-file=.env ./src/register.ts",
     "dev": "wrangler dev",
     "start": "wrangler dev",
