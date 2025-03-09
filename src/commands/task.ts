@@ -3,7 +3,7 @@ import type { InferSelectModel } from 'drizzle-orm'
 import { match } from 'ts-pattern'
 import type { tasks } from '../db/schema'
 import { factory } from '../factory'
-import { createTask, getTasks } from '../repository/task'
+import { createTask, deleteTask, getTasks } from '../repository/task'
 
 const MESSAGES = {
   NO_GUILD_ID: '❎ サーバーIDが取得できませんでした。',
@@ -29,7 +29,12 @@ type ListTaskVariables = {
   status?: 'all' | 'incomplete'
 }
 
-type TaskCommandVariables = CreateTaskVariables | ListTaskVariables
+type DeleteTaskVariables = {
+  subcommand: 'delete'
+  id: number
+}
+
+type TaskCommandVariables = CreateTaskVariables | ListTaskVariables | DeleteTaskVariables
 
 export const taskCommand = factory.command<TaskCommandVariables>(
   new Command('task', 'manage tasks').options(
@@ -42,6 +47,9 @@ export const taskCommand = factory.command<TaskCommandVariables>(
         { name: 'all', value: 'all' },
         { name: 'incomplete', value: 'incomplete' },
       ),
+    ),
+    new SubCommand('delete', 'タスクを削除します').options(
+      new Option('id', 'タスクのID', 'Integer').required(),
     ),
   ),
   (c) => {
@@ -96,6 +104,17 @@ export const taskCommand = factory.command<TaskCommandVariables>(
           return c.followup({
             embeds: [tasksEmbed(result.value)],
           })
+        }),
+      )
+      .with({ subcommand: 'delete' }, ({ id }) =>
+        c.resDefer(async (c) => {
+          const result = await deleteTask(c.env.DB, guildId, id)
+
+          if (result.isErr()) {
+            return c.followup({ content: MESSAGES.TASK_CREATE_FAILED })
+          }
+
+          return c.followup({ content: '✅ タスクを削除しました。' })
         }),
       )
       .exhaustive()

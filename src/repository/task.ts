@@ -37,3 +37,17 @@ export const getTasks = async (
 
   return result
 }
+
+export const deleteTask = async (db: D1Database, guildId: string, id: number) => {
+  const dbClient = createDbClient(db)
+  const result = await fromAsyncThrowable(
+    () =>
+      dbClient
+        .delete(tasks)
+        .where(and(eq(tasks.id, id), eq(tasks.guildId, guildId)))
+        .returning(),
+    (e) => e as DrizzleError,
+  )()
+
+  return result
+}
