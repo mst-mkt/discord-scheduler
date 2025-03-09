@@ -48,7 +48,7 @@ export const deleteTask = async (db: D1Database, guildId: string, id: number) =>
         .where(and(eq(tasks.id, id), eq(tasks.guildId, guildId)))
         .returning(),
     (e) => e as DrizzleError,
-  )()
+  )().andThen(([task]) => ok(task))
 
   return result
 }
@@ -63,7 +63,7 @@ export const completeTask = async (db: D1Database, guildId: string, id: number) 
         .where(and(eq(tasks.id, id), eq(tasks.guildId, guildId)))
         .returning(),
     (e) => e as DrizzleError,
-  )()
+  )().andThen(([task]) => ok(task))
 
   return result
 }

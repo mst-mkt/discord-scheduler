@@ -16,6 +16,12 @@ const MESSAGES = {
   TASK_LIST: '📋 タスク一覧',
   TASK_EMPTY: '📋 タスクはありません。',
   TASK_LIST_FAILED: '❎ タスクの取得に失敗しました。',
+
+  TASK_DELETED: '✅ タスクを削除しました。',
+  TASK_DELETE_FAILED: '❎ タスクの削除に失敗しました。',
+
+  TASK_COMPLETED: '✅ タスクを完了しました。',
+  TASK_COMPLETE_FAILED: '❎ タスクの完了に失敗しました。',
 }
 
 type CreateTaskVariables = {
@@ -98,7 +104,9 @@ export const taskCommand = factory.command<TaskCommandVariables>(
             return c.followup({ content: MESSAGES.TASK_CREATE_FAILED })
           }
 
-          return c.followup({ content: MESSAGES.TASK_CREATED })
+          return c.followup({
+            content: `${MESSAGES.TASK_CREATED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\``,
+          })
         }),
       )
       .with({ subcommand: 'list' }, ({ status }) =>
@@ -123,10 +131,12 @@ export const taskCommand = factory.command<TaskCommandVariables>(
           const result = await deleteTask(c.env.DB, guildId, id)
 
           if (result.isErr()) {
-            return c.followup({ content: MESSAGES.TASK_CREATE_FAILED })
+            return c.followup({ content: MESSAGES.TASK_DELETE_FAILED })
           }
 
-          return c.followup({ content: '✅ タスクを削除しました。' })
+          return c.followup({
+            content: `${MESSAGES.TASK_DELETED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\``,
+          })
         }),
       )
       .with({ subcommand: 'done' }, ({ id }) =>
@@ -134,10 +144,12 @@ export const taskCommand = factory.command<TaskCommandVariables>(
           const result = await completeTask(c.env.DB, guildId, id)
 
           if (result.isErr()) {
-            return c.followup({ content: MESSAGES.TASK_CREATE_FAILED })
+            return c.followup({ content: MESSAGES.TASK_COMPLETE_FAILED })
           }
 
-          return c.followup({ content: '✅ タスクを完了しました。' })
+          return c.followup({
+            content: `${MESSAGES.TASK_COMPLETED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\``,
+          })
         }),
       )
       .exhaustive()
