@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "discord-hono": "^0.16.3",
-    "drizzle-orm": "^0.40.0"
+    "drizzle-orm": "^0.40.0",
+    "neverthrow": "^8.2.0"
   }
 }
