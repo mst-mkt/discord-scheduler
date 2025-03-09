@@ -1,10 +1,4 @@
-import type { CommandContext } from 'discord-hono'
-import type { Env } from '..'
+import type { CommandHandler } from 'discord-hono'
+import type { Env } from '../factory'
 
-export type Command = {
-  name: string
-  description: string
-  handler: (c: CommandContext<Env>) => Response | Promise<Response>
-}
-
-export const commands: Command[] = []
+export const commands = [] satisfies CommandHandler<Env>[]
