@@ -18,12 +18,14 @@
     "@mst-mkt/js-config": "npm:@jsr/mst-mkt__js-config@^0.1.1",
     "@types/node": "^22.10.2",
     "discord-api-types": "^0.37.111",
+    "drizzle-kit": "^0.30.5",
     "tsx": "^4.19.2",
     "typescript": "^5.5.2",
     "vitest": "2.1.8",
     "wrangler": "^3.60.3"
   },
   "dependencies": {
-    "discord-hono": "^0.8.5"
+    "discord-hono": "^0.8.5",
+    "drizzle-orm": "^0.40.0"
   }
 }
