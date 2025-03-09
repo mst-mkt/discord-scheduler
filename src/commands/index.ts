@@ -1,4 +1,3 @@
-import type { CommandHandler } from 'discord-hono'
-import type { Env } from '../factory'
+import { taskCommand } from './task'
 
-export const commands = [] satisfies CommandHandler<Env>[]
+export const commands = [taskCommand]
