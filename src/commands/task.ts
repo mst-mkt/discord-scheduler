@@ -1,4 +1,5 @@
-import { Command, Option } from 'discord-hono'
+import { Command, Option, SubCommand } from 'discord-hono'
+import { match } from 'ts-pattern'
 import { factory } from '../factory'
 import { createTask } from '../repository/task'
 
@@ -11,15 +12,25 @@ const MESSAGES = {
   TASK_FAILED: '❎ タスクの作成に失敗しました。',
 }
 
-export const taskCommand = factory.command<{ content: string }>(
+type CreateTaskVariables = {
+  subcommand: 'create'
+  content: string
+  category?: string
+}
+
+type TaskCommandVariables = CreateTaskVariables
+
+export const taskCommand = factory.command<TaskCommandVariables>(
   new Command('task', 'manage tasks').options(
-    new Option('content', 'タスクの内容', 'String').min_length(1),
+    new SubCommand('create', '新しいタスクを作成します').options(
+      new Option('content', 'タスクの内容', 'String').min_length(1).required(),
+      new Option('category', 'タスクのカテゴリ (カンマ区切り)', 'String'),
+    ),
   ),
   (c) => {
     const guildId = c.interaction.guild_id
     const channelId = c.interaction.channel.id
     const userId = c.interaction.member?.user.id
-    const content = c.var.content
 
     if (guildId === undefined) {
       return c.res({ content: MESSAGES.NO_GUILD_ID })
@@ -33,19 +44,24 @@ export const taskCommand = factory.command<{ content: string }>(
       return c.res({ content: MESSAGES.NO_USER_ID })
     }
 
-    return c.resDefer(async (c) => {
-      const result = await createTask(c.env.DB, {
-        guildId,
-        channelId,
-        userId,
-        content,
-      })
+    return match(c.var)
+      .with({ subcommand: 'create' }, ({ content, category }) =>
+        c.resDefer(async (c) => {
+          const result = await createTask(c.env.DB, {
+            guildId,
+            channelId,
+            userId,
+            content,
+            category: category?.split(',').map((c) => c.trim()) ?? [],
+          })
 
-      if (result.isErr()) {
-        return c.followup({ content: MESSAGES.TASK_FAILED })
-      }
+          if (result.isErr()) {
+            return c.followup({ content: MESSAGES.TASK_FAILED })
+          }
 
-      return c.followup({ content: MESSAGES.TASK_CREATED })
-    })
+          return c.followup({ content: MESSAGES.TASK_CREATED })
+        }),
+      )
+      .exhaustive()
   },
 )
