@@ -152,7 +152,7 @@ const schedulesEmbed = (schedule: InferSelectModel<typeof schedules>[]) => {
         .slice(0, 25)
         .reverse()
         .map((schedule) => ({
-          name: `${schedule.date}${schedule.time === undefined ? '' : ` ${schedule.time}`} | ${schedule.content}`,
+          name: `${schedule.date}${schedule.time === null ? '' : ` ${schedule.time}`} | ${schedule.content}`,
           value: `-# \`${schedule.id}\` ${schedule.category?.length === 0 ? '' : `| ${schedule.category?.join(', ')}`}`,
         })),
     )
