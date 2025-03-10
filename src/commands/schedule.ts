@@ -54,7 +54,7 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
     ),
     new SubCommand('list', 'スケジュールの一覧を表示します'),
     new SubCommand('delete', 'スケジュールを削除します').options(
-      new Option('id', 'スケジュールのID (カンマ区切り)', 'Integer').required(),
+      new Option('id', 'スケジュールのID (カンマ区切り)', 'String').required(),
     ),
   ),
   (c) => {
