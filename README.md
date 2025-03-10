@@ -6,9 +6,23 @@ A discord bot for managing tasks and schedules.
 
 </div>
 
+## features
+
+- Manage tasks
+- Manage schedules
+- Notify schedules on the day
+
 ## commands
 
-
+- `task`: Manage tasks
+  - `create`: Create a new task
+  - `delete`: Delete a task
+  - `list`: List all tasks
+  - `done`: Mark a task as done
+- `schedule`: Manage schedules
+  - `create`: Create a new schedule
+  - `delete`: Delete a schedule
+  - `list`: List all schedules
 
 ## deploy
 
