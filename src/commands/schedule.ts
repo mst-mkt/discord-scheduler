@@ -145,7 +145,8 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
                 .when(
                   (r) => r.isErr(),
                   () => MESSAGES.SCHEDULE_DELETE_FAILED,
-                ),
+                )
+                .otherwise(() => ''),
             )
             .join('\n')
 

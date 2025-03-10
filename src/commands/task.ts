@@ -145,7 +145,8 @@ export const taskCommand = factory.command<TaskCommandVariables>(
                 .when(
                   (r) => r.isErr(),
                   () => MESSAGES.TASK_DELETE_FAILED,
-                ),
+                )
+                .otherwise(() => ''),
             )
             .join('\n')
 
@@ -171,7 +172,8 @@ export const taskCommand = factory.command<TaskCommandVariables>(
                 .when(
                   (r) => r.isErr(),
                   () => MESSAGES.TASK_COMPLETE_FAILED,
-                ),
+                )
+                .otherwise(() => ''),
             )
             .join('\n')
 
