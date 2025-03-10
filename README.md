@@ -24,9 +24,7 @@ pnpm register
 pnpm run deploy
 ```
 
-## environment variables
-
-### for discord (`.env`)
+## environment variables (`.dev.vars`)
 
 - `DISCORD_APPLICATION_ID`
 - `DISCORD_CLIENT_ID`

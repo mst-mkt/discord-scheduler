@@ -6,7 +6,7 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "predeploy": "npm run register",
-    "register": "tsx --env-file=.env ./src/register.ts",
+    "register": "tsx --env-file=.dev.vars ./src/register.ts",
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
