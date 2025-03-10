@@ -32,6 +32,21 @@ export const getSchedules = async (db: D1Database, guildId: string) => {
   return result
 }
 
+export const getTodaySchedules = async (db: D1Database, date: string) => {
+  const dbClient = createDbClient(db)
+  const result = await fromAsyncThrowable(
+    () =>
+      dbClient
+        .select()
+        .from(schedules)
+        .where(eq(schedules.date, date))
+        .orderBy(asc(schedules.createdAt)),
+    (e) => e as DrizzleError,
+  )()
+
+  return result
+}
+
 export const deleteSchedule = async (db: D1Database, guildId: string, id: number) => {
   const dbClient = createDbClient(db)
   const result = await fromAsyncThrowable(

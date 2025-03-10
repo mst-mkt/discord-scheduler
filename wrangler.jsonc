@@ -5,6 +5,12 @@
   "compatibility_date": "2025-03-08",
   "compatibility_flags": ["nodejs_compat"],
 
+  "triggers": {
+    "crons": [
+      "0 22 * * *" // JST 07:00
+    ]
+  },
+
   "observability": {
     "enabled": true
   },
