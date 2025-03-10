@@ -4,6 +4,8 @@
 
 A discord bot for managing tasks and schedules.
 
+[🔥 install](https://discord.com/oauth2/authorize?client_id=1347884369653661779)
+
 </div>
 
 ## features
