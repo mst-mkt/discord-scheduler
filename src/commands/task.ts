@@ -37,12 +37,12 @@ type ListTaskVariables = {
 
 type DeleteTaskVariables = {
   subcommand: 'delete'
-  id: number
+  id: string
 }
 
 type DoneTaskVariables = {
   subcommand: 'done'
-  id: number
+  id: string
 }
 
 type TaskCommandVariables =
@@ -64,10 +64,10 @@ export const taskCommand = factory.command<TaskCommandVariables>(
       ),
     ),
     new SubCommand('delete', 'タスクを削除します').options(
-      new Option('id', 'タスクのID', 'Integer').required(),
+      new Option('id', 'タスクのID (カンマ区切り)', 'String').required(),
     ),
     new SubCommand('done', 'タスクを完了にします').options(
-      new Option('id', 'タスクのID', 'Integer').required(),
+      new Option('id', 'タスクのID (カンマ区切り)', 'String').required(),
     ),
   ),
   (c) => {
@@ -128,28 +128,54 @@ export const taskCommand = factory.command<TaskCommandVariables>(
       )
       .with({ subcommand: 'delete' }, ({ id }) =>
         c.resDefer(async (c) => {
-          const result = await deleteTask(c.env.DB, guildId, id)
+          const ids = id
+            .split(',')
+            .map((id) => Number.parseInt(id.trim()))
+            .filter((id) => !Number.isNaN(id))
 
-          if (result.isErr()) {
-            return c.followup({ content: MESSAGES.TASK_DELETE_FAILED })
-          }
+          const results = await Promise.all(ids.map((id) => deleteTask(c.env.DB, guildId, id)))
 
-          return c.followup({
-            content: `${MESSAGES.TASK_DELETED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\``,
-          })
+          const message = results
+            .map((result) =>
+              match(result)
+                .when(
+                  (r) => r.isOk(),
+                  () => MESSAGES.TASK_DELETED,
+                )
+                .when(
+                  (r) => r.isErr(),
+                  () => MESSAGES.TASK_DELETE_FAILED,
+                ),
+            )
+            .join('\n')
+
+          return c.followup({ content: message })
         }),
       )
       .with({ subcommand: 'done' }, ({ id }) =>
         c.resDefer(async (c) => {
-          const result = await completeTask(c.env.DB, guildId, id)
+          const ids = id
+            .split(',')
+            .map((id) => Number.parseInt(id.trim()))
+            .filter((id) => !Number.isNaN(id))
 
-          if (result.isErr()) {
-            return c.followup({ content: MESSAGES.TASK_COMPLETE_FAILED })
-          }
+          const results = await Promise.all(ids.map((id) => completeTask(c.env.DB, guildId, id)))
 
-          return c.followup({
-            content: `${MESSAGES.TASK_COMPLETED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\``,
-          })
+          const message = results
+            .map((result) =>
+              match(result)
+                .when(
+                  (r) => r.isOk(),
+                  () => MESSAGES.TASK_COMPLETED,
+                )
+                .when(
+                  (r) => r.isErr(),
+                  () => MESSAGES.TASK_COMPLETE_FAILED,
+                ),
+            )
+            .join('\n')
+
+          return c.followup({ content: message })
         }),
       )
       .exhaustive()

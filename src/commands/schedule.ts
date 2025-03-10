@@ -36,7 +36,7 @@ type ListScheduleVariables = {
 
 type DeleteScheduleVariables = {
   subcommand: 'delete'
-  id: number
+  id: string
 }
 
 type ScheduleCommandVariables =
@@ -54,7 +54,7 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
     ),
     new SubCommand('list', 'スケジュールの一覧を表示します'),
     new SubCommand('delete', 'スケジュールを削除します').options(
-      new Option('id', 'スケジュールのID', 'Integer').required(),
+      new Option('id', 'スケジュールのID (カンマ区切り)', 'Integer').required(),
     ),
   ),
   (c) => {
@@ -128,15 +128,28 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
       )
       .with({ subcommand: 'delete' }, ({ id }) =>
         c.resDefer(async (c) => {
-          const result = await deleteSchedule(c.env.DB, guildId, id)
+          const ids = id
+            .split(',')
+            .map((id) => Number.parseInt(id.trim()))
+            .filter((id) => !Number.isNaN(id))
 
-          if (result.isErr()) {
-            return c.followup({ content: MESSAGES.SCHEDULE_DELETE_FAILED })
-          }
+          const results = await Promise.all(ids.map((id) => deleteSchedule(c.env.DB, guildId, id)))
 
-          return c.followup({
-            content: `${MESSAGES.SCHEDULE_DELETED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\``,
-          })
+          const message = results
+            .map((result) =>
+              match(result)
+                .when(
+                  (r) => r.isOk(),
+                  () => MESSAGES.SCHEDULE_DELETED,
+                )
+                .when(
+                  (r) => r.isErr(),
+                  () => MESSAGES.SCHEDULE_DELETE_FAILED,
+                ),
+            )
+            .join('\n')
+
+          return c.followup({ content: message })
         }),
       )
       .exhaustive()
