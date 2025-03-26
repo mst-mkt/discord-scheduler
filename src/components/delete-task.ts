@@ -1,6 +1,7 @@
 import { Button } from 'discord-hono'
 import { factory } from '../factory'
 import { deleteTask } from '../repository/task'
+import { updateTaskBoard } from '../usecase/update-board'
 
 export const deleteTaskComponent = factory.component(
   new Button('task_delete', '', 'Danger'),
@@ -23,6 +24,8 @@ export const deleteTaskComponent = factory.component(
         console.error('deleteTask error', result.error)
         return c.ephemeral().followup({ content: '❎ タスクの削除に失敗しました。' })
       }
+
+      await updateTaskBoard(c.env.DB, guildId, c.rest)
 
       return c.followupDelete()
     })

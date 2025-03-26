@@ -6,6 +6,7 @@ import { doneTaskComponent } from '../components/done-task'
 import type { tasks } from '../db/schema'
 import { factory } from '../factory'
 import { completeTask, createTask, deleteTask, getTasks } from '../repository/task'
+import { updateTaskBoard } from '../usecase/update-board'
 
 const MESSAGES = {
   NO_GUILD_ID: '❎ サーバーIDが取得できませんでした。',
@@ -106,6 +107,8 @@ export const taskCommand = factory.command<TaskCommandVariables>(
             return c.followup({ content: MESSAGES.TASK_CREATE_FAILED })
           }
 
+          await updateTaskBoard(c.env.DB, guildId, c.rest)
+
           return c.followup({
             content: `${MESSAGES.TASK_CREATED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\``,
             components: new Components().row(
@@ -149,6 +152,8 @@ export const taskCommand = factory.command<TaskCommandVariables>(
 
           const results = await Promise.all(ids.map((id) => deleteTask(c.env.DB, guildId, id)))
 
+          await updateTaskBoard(c.env.DB, guildId, c.rest)
+
           const message = results
             .map((result) =>
               match(result)
@@ -176,6 +181,8 @@ export const taskCommand = factory.command<TaskCommandVariables>(
 
           const results = await Promise.all(ids.map((id) => completeTask(c.env.DB, guildId, id)))
 
+          await updateTaskBoard(c.env.DB, guildId, c.rest)
+
           const message = results
             .map((result) =>
               match(result)
@@ -198,7 +205,7 @@ export const taskCommand = factory.command<TaskCommandVariables>(
   },
 )
 
-const tasksEmbed = (task: InferSelectModel<typeof tasks>[]) => {
+export const tasksEmbed = (task: InferSelectModel<typeof tasks>[]) => {
   return new Embed()
     .title(MESSAGES.TASK_LIST)
     .description(`全 ${task.length} 件`)

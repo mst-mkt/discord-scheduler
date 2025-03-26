@@ -1,6 +1,7 @@
 import { Button } from 'discord-hono'
 import { factory } from '../factory'
 import { completeTask } from '../repository/task'
+import { updateTaskBoard } from '../usecase/update-board'
 
 export const doneTaskComponent = factory.component(
   new Button('task_complete', '', 'Primary'),
@@ -23,6 +24,8 @@ export const doneTaskComponent = factory.component(
         console.error('completeTask error', result.error)
         return c.ephemeral().followup({ content: '❎ タスクの完了に失敗しました。' })
       }
+
+      await updateTaskBoard(c.env.DB, guildId, c.rest)
 
       return c.followup('✅ タスクを完了しました。')
     })

@@ -5,6 +5,7 @@ import { deleteScheduleComponent } from '../components/delete-schedule'
 import type { schedules } from '../db/schema'
 import { factory } from '../factory'
 import { createSchedule, deleteSchedule, getSchedules } from '../repository/schedule'
+import { updateScheduleBoard } from '../usecase/update-board'
 import { generateDataTime, validateDate, validateTime } from '../utils/datetime'
 
 const MESSAGES = {
@@ -106,6 +107,8 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
             return c.followup({ content: MESSAGES.SCHEDULE_CREATE_FAILED })
           }
 
+          await updateScheduleBoard(c.env.DB, guildId, c.rest)
+
           return c.followup({
             content: `${MESSAGES.SCHEDULE_CREATED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\`, DATE: \`${result.value.date}\`, TIME: \`${result.value.time}\``,
             components: new Components().row(
@@ -144,6 +147,8 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
 
           const results = await Promise.all(ids.map((id) => deleteSchedule(c.env.DB, guildId, id)))
 
+          await updateScheduleBoard(c.env.DB, guildId, c.rest)
+
           const message = results
             .map((result) =>
               match(result)
@@ -166,7 +171,7 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
   },
 )
 
-const schedulesEmbed = (schedule: InferSelectModel<typeof schedules>[]) => {
+export const schedulesEmbed = (schedule: InferSelectModel<typeof schedules>[]) => {
   return new Embed()
     .title(MESSAGES.SCHEDULE_LIST)
     .description(`全 ${schedule.length} 件`)
