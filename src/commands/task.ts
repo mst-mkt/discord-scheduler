@@ -1,6 +1,7 @@
-import { Command, Embed, Option, SubCommand } from 'discord-hono'
+import { Command, Components, Embed, Option, SubCommand } from 'discord-hono'
 import type { InferSelectModel } from 'drizzle-orm'
 import { match } from 'ts-pattern'
+import { deleteTaskComponent } from '../components/delete-task'
 import type { tasks } from '../db/schema'
 import { factory } from '../factory'
 import { completeTask, createTask, deleteTask, getTasks } from '../repository/task'
@@ -106,6 +107,13 @@ export const taskCommand = factory.command<TaskCommandVariables>(
 
           return c.followup({
             content: `${MESSAGES.TASK_CREATED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\``,
+            components: new Components().row(
+              deleteTaskComponent.component
+                .emoji('🗑')
+                .label('削除')
+                .custom_id(result.value.id.toString())
+                .toJSON(),
+            ),
           })
         }),
       )
