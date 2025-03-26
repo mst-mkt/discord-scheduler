@@ -20,7 +20,7 @@
     "@cloudflare/vitest-pool-workers": "^0.5.41",
     "@cloudflare/workers-types": "^4.20250303.0",
     "@libsql/client": "^0.14.0",
-    "@mst-mkt/js-config": "npm:@jsr/mst-mkt__js-config@^0.1.1",
+    "@mst-mkt/js-config": "npm:@jsr/mst-mkt__js-config@^0.1.2",
     "@types/node": "^22.13.10",
     "discord-api-types": "^0.37.119",
     "drizzle-kit": "^0.30.5",
