@@ -29,6 +29,13 @@
       "when": 1742999347255,
       "tag": "0003_bored_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1743017443049,
+      "tag": "0004_rich_firedrake",
+      "breakpoints": true
     }
   ]
 }

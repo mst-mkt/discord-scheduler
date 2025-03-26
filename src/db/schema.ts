@@ -30,3 +30,10 @@ export const schedules = sqliteTable('schedules', (d) => ({
 
   createdAt: d.integer({ mode: 'timestamp_ms' }).default(sql`(current_timestamp)`),
 }))
+
+export const boardMessages = sqliteTable('board_messages', (d) => ({
+  guildId: d.text({ mode: 'text' }).notNull(),
+  channelId: d.text({ mode: 'text' }).notNull(),
+  messageId: d.text({ mode: 'text' }).notNull(),
+  type: d.text({ mode: 'text' }).$type<'task' | 'schedule'>().notNull(),
+}))
