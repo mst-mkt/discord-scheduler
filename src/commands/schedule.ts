@@ -1,6 +1,7 @@
-import { Command, Embed, Option, SubCommand } from 'discord-hono'
+import { Command, Components, Embed, Option, SubCommand } from 'discord-hono'
 import type { InferSelectModel } from 'drizzle-orm'
 import { match } from 'ts-pattern'
+import { deleteScheduleComponent } from '../components/delete-schedule'
 import type { schedules } from '../db/schema'
 import { factory } from '../factory'
 import { createSchedule, deleteSchedule, getSchedules } from '../repository/schedule'
@@ -107,6 +108,13 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
 
           return c.followup({
             content: `${MESSAGES.SCHEDULE_CREATED}\nID: \`${result.value.id}\`, TITLE: \`${result.value.content}\`, DATE: \`${result.value.date}\`, TIME: \`${result.value.time}\``,
+            components: new Components().row(
+              deleteScheduleComponent.component
+                .emoji('🗑')
+                .label('削除')
+                .custom_id(result.value.id.toString())
+                .toJSON(),
+            ),
           })
         })
       })
