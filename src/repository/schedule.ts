@@ -25,7 +25,7 @@ export const getSchedules = async (db: D1Database, guildId: string) => {
         .select()
         .from(schedules)
         .where(eq(schedules.guildId, guildId))
-        .orderBy(asc(schedules.createdAt)),
+        .orderBy(asc(schedules.dateTime)),
     (e) => e as DrizzleError,
   )()
 
