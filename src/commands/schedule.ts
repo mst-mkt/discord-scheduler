@@ -163,13 +163,10 @@ const schedulesEmbed = (schedule: InferSelectModel<typeof schedules>[]) => {
     .title(MESSAGES.SCHEDULE_LIST)
     .description(`全 ${schedule.length} 件`)
     .fields(
-      ...schedule
-        .slice(0, 25)
-        .reverse()
-        .map((schedule) => ({
-          name: `${schedule.date}${schedule.time === null ? '' : ` ${schedule.time}`} | ${schedule.content}`,
-          value: `-# \`${schedule.id}\` ${schedule.category?.length === 0 ? '' : `| ${schedule.category?.join(', ')}`}`,
-        })),
+      ...schedule.slice(0, 25).map((schedule) => ({
+        name: `${schedule.date}${schedule.time === null ? '' : ` ${schedule.time}`} | ${schedule.content}`,
+        value: `-# \`${schedule.id}\` ${schedule.category?.length === 0 ? '' : `| ${schedule.category?.join(', ')}`}`,
+      })),
     )
     .footer({
       text: schedule.length > 25 ? `残り ${schedule.length - 25} 件` : '',
