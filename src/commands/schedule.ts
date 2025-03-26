@@ -4,7 +4,7 @@ import { match } from 'ts-pattern'
 import type { schedules } from '../db/schema'
 import { factory } from '../factory'
 import { createSchedule, deleteSchedule, getSchedules } from '../repository/schedule'
-import { validateDate, validateTime } from '../utils/datetime'
+import { generateDataTime, validateDate, validateTime } from '../utils/datetime'
 
 const MESSAGES = {
   NO_GUILD_ID: '❎ サーバーIDが取得できませんでした。',
@@ -98,6 +98,7 @@ export const scheduleCommand = factory.command<ScheduleCommandVariables>(
             category: category?.split(',').map((v) => v.trim()) ?? [],
             date: dateResult.value,
             time: timeResult.value,
+            dateTime: generateDataTime(dateResult.value, timeResult.value),
           })
 
           if (result.isErr()) {
