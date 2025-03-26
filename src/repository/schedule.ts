@@ -1,31 +1,8 @@
 import type { D1Database } from '@cloudflare/workers-types'
-import { type DrizzleError, type InferInsertModel, and, asc, eq, isNull } from 'drizzle-orm'
-import type { DrizzleD1Database } from 'drizzle-orm/d1'
+import { type DrizzleError, type InferInsertModel, and, asc, eq } from 'drizzle-orm'
 import { fromAsyncThrowable, ok } from 'neverthrow'
 import { createDbClient } from '../db/client'
 import { schedules } from '../db/schema'
-import { generateDataTime } from '../utils/datetime'
-
-const insertDataTime = async (dbClient: DrizzleD1Database) => {
-  const datetimeEmptyRecords = await dbClient
-    .select()
-    .from(schedules)
-    .where(isNull(schedules.dateTime))
-  if (datetimeEmptyRecords.length === 0) return
-
-  const dateTimes = datetimeEmptyRecords.map((record) =>
-    generateDataTime(record.date, record.time ?? undefined),
-  )
-
-  await Promise.all(
-    datetimeEmptyRecords.map((record, index) =>
-      dbClient
-        .update(schedules)
-        .set({ dateTime: dateTimes[index] })
-        .where(eq(schedules.id, record.id)),
-    ),
-  )
-}
 
 export const createSchedule = async (
   db: D1Database,
@@ -51,8 +28,6 @@ export const getSchedules = async (db: D1Database, guildId: string) => {
         .orderBy(asc(schedules.createdAt)),
     (e) => e as DrizzleError,
   )()
-
-  insertDataTime(dbClient)
 
   return result
 }
