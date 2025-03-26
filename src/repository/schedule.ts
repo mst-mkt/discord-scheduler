@@ -1,8 +1,9 @@
 import type { D1Database } from '@cloudflare/workers-types'
-import { type DrizzleError, type InferInsertModel, and, asc, eq } from 'drizzle-orm'
+import { type DrizzleError, type InferInsertModel, and, asc, eq, gt } from 'drizzle-orm'
 import { fromAsyncThrowable, ok } from 'neverthrow'
 import { createDbClient } from '../db/client'
 import { schedules } from '../db/schema'
+import { getJstDate } from '../utils/datetime'
 
 export const createSchedule = async (
   db: D1Database,
@@ -24,7 +25,7 @@ export const getSchedules = async (db: D1Database, guildId: string) => {
       dbClient
         .select()
         .from(schedules)
-        .where(eq(schedules.guildId, guildId))
+        .where(and(eq(schedules.guildId, guildId), gt(schedules.dateTime, getJstDate())))
         .orderBy(asc(schedules.dateTime)),
     (e) => e as DrizzleError,
   )()

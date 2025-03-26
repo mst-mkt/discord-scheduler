@@ -48,3 +48,8 @@ export const generateDataTime = (date: string, time?: string) => {
 
   return dateTime
 }
+
+export const getJstDate = () => {
+  const current = new Date()
+  return new Date(current.getTime() + (current.getTimezoneOffset() + 540) * 60 * 1000)
+}
