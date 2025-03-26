@@ -26,5 +26,7 @@ export const schedules = sqliteTable('schedules', (d) => ({
   date: d.text({ mode: 'text' }).notNull(),
   time: d.text({ mode: 'text' }),
 
+  dateTime: d.integer({ mode: 'timestamp_ms' }),
+
   createdAt: d.integer({ mode: 'timestamp_ms' }).default(sql`(current_timestamp)`),
 }))

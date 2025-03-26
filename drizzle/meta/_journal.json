@@ -15,6 +15,13 @@
       "when": 1741513243172,
       "tag": "0001_adorable_gamora",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1742979854816,
+      "tag": "0002_wet_thunderbolt_ross",
+      "breakpoints": true
     }
   ]
 }
