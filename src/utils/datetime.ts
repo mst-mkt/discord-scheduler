@@ -39,3 +39,12 @@ export const validateTime = (time?: string) => {
 
   return ok(`${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`)
 }
+
+export const generateDataTime = (date: string, time?: string) => {
+  const [year, month, day] = date.split('/').map((v) => Number.parseInt(v, 10))
+  const [hour, minute] = time?.split(':').map((v) => Number.parseInt(v, 10)) ?? [0, 0]
+
+  const dateTime = new Date(year, month - 1, day, hour, minute)
+
+  return dateTime
+}
